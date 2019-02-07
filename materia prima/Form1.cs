@@ -21,22 +21,19 @@ namespace materia_prima
         public Form1()
         {
             InitializeComponent();
-            //dataGridView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            //dataGridView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+           
             materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
             //materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
             materialSkinManager.ColorScheme = new ColorScheme(Primary.Green600, Primary.Green700, Primary.Green200, Accent.Red100, TextShade.WHITE);
-            // MaterialSkin.Controls.MaterialSingleLineTextField
-            //  MaterialSkin.Controls.MaterialListView
+           
 
             config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             conexion_q.ConnectionString = config.ConnectionStrings.ConnectionStrings["Cnn_Quality"].ConnectionString;
             terminal = config.AppSettings.Settings["ID"].Value;
             En_pantalla = new datos_materia_prima(terminal, conexion_q.ConnectionString);
-            //DataTable datos= En_pantalla.Get_Datos();
-            //rellenaListview(En_pantalla.Get_Datos());
+            
             dataGridView1.DataSource = En_pantalla.Get_Datos();
             //dataGridView1=
         }
@@ -71,38 +68,84 @@ namespace materia_prima
         private SqlConnectionStringBuilder conexion_q = new SqlConnectionStringBuilder();
         private string terminal { get; set; }
         private void Actualiza() { dataGridView1.DataSource = En_pantalla.Get_Datos(); }
+        private bool es_numerico(string cadena) {
+            bool result = true;
+            
+            foreach (char a in cadena)
+            {
+                if (!char.IsDigit(a))
+                {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
+        }
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (textBox1.Text.Length > 10) { 
-                Form_Leido popup = new Form_Leido(textBox1.Text, conexion_q.ConnectionString,terminal, materialSkinManager);
-                
-                if (popup.ShowDialog() == DialogResult.OK) {
-                    DataTable a = popup.Get_datos_matricula();
-                    foreach (DataRow row in a.Rows) {
-                        if (row[11].ToString() == "False")
+                if (textBox1.Text.Length > 10) {
+                    textBox1.Text=textBox1.Text.Replace(" ", "");
+                    if (es_numerico(textBox1.Text)){ 
+                        materia_prima Materia = new materia_prima(textBox1.Text, conexion_q.ConnectionString, terminal);
+                        DataTable a=new DataTable();
+                        if (Materia.existe() == false)
                         {
-                            label3.Text = "No Fifo";
+                            MessageBox.Show("La Matricula no existe", "Atencion!!");
                         }
-                        else { label3.Text = "Fifo Ok"; }
+                       else if (Materia.tiene_stock() == false)
+                        {
+                            MessageBox.Show("La Matricula no tiene Stock" , "Atencion!!");
+                        }
+                       else if (Materia.ya_existe())
+                        {
+                            MessageBox.Show("La Matricula ya la has añadido", "Atencion!!");
+                        }
+                        else if (Materia.es_fifo())
+                        {
+                            a = Materia.Get_datos_matricula();
+                            En_pantalla.Insertar(a);
+                        }
+                        else
+                        {
+                            Form_Leido popup = new Form_Leido(textBox1.Text, conexion_q.ConnectionString, terminal);
+                            popup.getForm = this;
+                            this.Hide();
+
+                            if (popup.ShowDialog() == DialogResult.OK)
+                            {
+                                a = popup.Get_datos_matricula();
+                                foreach (DataRow row in a.Rows)
+                                {
+                                    if (row[11].ToString() == "False")
+                                    {
+                                        label3.Text = "No Fifo";
+                                    }
+                                    else {
+                                        label3.Text = "Fifo Ok";
+
+                                    }
+                                    
+                                }
+                                En_pantalla.Insertar(a);
+                            }
+                        }
+                        materialSkinManager.ColorScheme = new ColorScheme(Primary.Green600, Primary.Green700, Primary.Green200, Accent.Red100, TextShade.WHITE);
+
+                        Actualiza();
+                        //rellenaListview(En_pantalla.Get_Datos());
                     }
-                    En_pantalla.Insertar(a);
-                    Actualiza();
-                    //rellenaListview(En_pantalla.Get_Datos());
                 }
-                    //EjecutarFuncion();
-                }
+                //EjecutarFuncion();
             }
+            
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Opciones_form opiones = new Opciones_form();
-           // opiones.ShowDialog();
-          
-          // SqlConnectionStringBuilder conexion_q = new SqlConnectionStringBuilder();
+           
             conexion_q.ConnectionString=config.ConnectionStrings.ConnectionStrings["Cnn_Quality"].ConnectionString;
             terminal = config.AppSettings.Settings["ID"].Value;
             Opciones_form opciones = new Opciones_form(conexion_q, terminal);
@@ -169,14 +212,46 @@ namespace materia_prima
         private void button2_Click(object sender, EventArgs e)
         {
             // Traspaso_Almacen tras = new Traspaso_Almacen(conexion_q.ConnectionString);
-            if (En_pantalla.Validar()) {
-                MessageBox.Show("Datos Guardados Correctamente", "Atencion");
+            int termi = 0;
+            int.TryParse(terminal, out termi);
+            if (dataGridView1.RowCount > 0)
+            {
+                if (termi > 0)
+                {
+                    Form5 reporte = new Form5(termi);
+                    reporte.getForm = this;
+                    this.Hide();
+                    if (DialogResult.OK == reporte.ShowDialog())
+                    {
+                        En_pantalla.Validar();
+                        reporte.Dispose();
+                        reporte = null;
+                        Actualiza();
+                    }
+                }
+
+            }else { MessageBox.Show("No hay matriculas que validad.", "Atencion!!"); }
+
+           //tras.Intern_TraspasaStockPartidas(2016,1,"D", 152774,0, 366, 6, 100,100);
+        }
+
+        private void materialFlatButton1_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.RowCount > 0) { 
+            int fila = this.dataGridView1.SelectedCells[0].RowIndex;
+            string sscc = this.dataGridView1.Rows[fila].Cells[3].Value.ToString();
+            string mensaje = "Deseas Borrar, la matricula:\r\n" + sscc;
+            DialogResult boton = MessageBox.Show(mensaje, "Alerta", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (boton == DialogResult.OK)
+            {
+                En_pantalla.Borrar(sscc);
                 Actualiza();
             }
-            /*string[] ssccs = { "684370000003511884", "684370000003315642" };
-           bool result =tras.TraspasoEntreAlmacenes_SSCC(14, ssccs, false);*/
-            int a=0;
-           //tras.Intern_TraspasaStockPartidas(2016,1,"D", 152774,0, 366, 6, 100,100);
+        }
+            /*  else
+
+              MessageBox.Show(sscc);*/
+
         }
     }
 }

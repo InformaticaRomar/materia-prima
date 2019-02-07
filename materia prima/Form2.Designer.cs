@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Leido));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -47,7 +48,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.07425F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.92575F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 297F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 216F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 217F));
             this.tableLayoutPanel1.Controls.Add(this.dataGridView2, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.dataGridView1, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
@@ -100,7 +101,7 @@
             this.label1.Depth = 0;
             this.label1.Font = new System.Drawing.Font("Roboto", 11F);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label1.Location = new System.Drawing.Point(123, 0);
+            this.label1.Location = new System.Drawing.Point(122, 0);
             this.label1.MouseState = MaterialSkin.MouseState.HOVER;
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 19);
@@ -113,7 +114,7 @@
             this.label2.Depth = 0;
             this.label2.Font = new System.Drawing.Font("Roboto", 11F);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label2.Location = new System.Drawing.Point(123, 107);
+            this.label2.Location = new System.Drawing.Point(122, 107);
             this.label2.MouseState = MaterialSkin.MouseState.HOVER;
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(290, 23);
@@ -125,7 +126,7 @@
             this.Rechazar.AutoSize = true;
             this.Rechazar.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Rechazar.Depth = 0;
-            this.Rechazar.Location = new System.Drawing.Point(124, 267);
+            this.Rechazar.Location = new System.Drawing.Point(123, 267);
             this.Rechazar.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Rechazar.MouseState = MaterialSkin.MouseState.HOVER;
             this.Rechazar.Name = "Rechazar";
@@ -141,7 +142,7 @@
             this.Aceptar.AutoSize = true;
             this.Aceptar.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Aceptar.Depth = 0;
-            this.Aceptar.Location = new System.Drawing.Point(431, 267);
+            this.Aceptar.Location = new System.Drawing.Point(430, 267);
             this.Aceptar.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Aceptar.MouseState = MaterialSkin.MouseState.HOVER;
             this.Aceptar.Name = "Aceptar";
@@ -157,7 +158,7 @@
             this.Imprimir.AutoSize = true;
             this.Imprimir.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Imprimir.Depth = 0;
-            this.Imprimir.Location = new System.Drawing.Point(728, 113);
+            this.Imprimir.Location = new System.Drawing.Point(727, 113);
             this.Imprimir.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Imprimir.MouseState = MaterialSkin.MouseState.HOVER;
             this.Imprimir.Name = "Imprimir";
@@ -166,6 +167,7 @@
             this.Imprimir.TabIndex = 6;
             this.Imprimir.Text = "Imprimir";
             this.Imprimir.UseVisualStyleBackColor = true;
+            this.Imprimir.Click += new System.EventHandler(this.Imprimir_Click);
             // 
             // Form_Leido
             // 
@@ -173,13 +175,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(941, 429);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form_Leido";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Datos Matricula";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_Leido_FormClosed);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
